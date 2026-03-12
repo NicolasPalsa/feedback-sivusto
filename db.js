@@ -142,6 +142,7 @@ const addMessage = async (ticket_id, from_user, body) => {
         console.log('Error adding message:', error);
     }
 }
+
 const changeTicketStatus = async (ticket_id, status) => {
     const handled_date = new Date().toISOString().slice(0, 19).replace('T', ' ')
     try {
@@ -171,6 +172,35 @@ const changeTicketStatus = async (ticket_id, status) => {
     }
 }
 
+const attemptLogin = async (email, id) => {
+    try {
+        const connection = await getConnection()
+        const sql = `
+                    SELECT system_user.id AS 'id',
+                    system_user.email AS 'email',
+                    system_user.admin AS 'admin'
+                    FROM system_user
+                    WHERE ADMIN = 1
+                    AND id = ?
+                    AND email = ?
+                    `
+        const [bool] = await connection.execute(sql, [id, email])
+        connection.release()
+
+        if (bool[0] != undefined) {
+            console.log('login succesful')
+            return true
+        } else {
+            console.log('login FAILED')
+            return false
+        }
+    } catch (error) {
+        console.log('Error attempting login:', error);
+    }
+}
+
+
+
 export default {
     getUsers,
     getUserName,
@@ -178,5 +208,6 @@ export default {
     getSupportMessages,
     getFeedback,
     addMessage,
-    changeTicketStatus
+    changeTicketStatus,
+    attemptLogin
 }

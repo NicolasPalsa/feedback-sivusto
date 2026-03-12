@@ -75,3 +75,9 @@ p {
 .hidden {
     display: none;
 }
+
+.log-out-button {
+    position: fixed;
+    top: 48px;
+    right: 48px;
+}

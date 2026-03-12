@@ -8,6 +8,9 @@ import dbconfig from './dbconfig.json' with { type: 'json' }
 import db from './db.js'
 import { fileURLToPath } from 'node:url'
 
+// Lets
+let loggedIn = false
+
 // Constants
 const { host, port } = config
 
@@ -31,13 +34,21 @@ app.use(express.urlencoded({extended: true}))
 app.use(express.static('public'))
 app.use('/styles', express.static('public/styles'));
 
+// Functions
+function isLoggedIn(req, res, next) {
+    if (!loggedIn) {
+        return res.redirect('/login')
+    } else {
+        next()
+    }
+}
 
 // Paths
-app.get('/', async (req, res) => {
+app.get('/', isLoggedIn, async (req, res) => {
     res.redirect('users')
 })
 
-app.get('/users', async (req, res) => {
+app.get('/users', isLoggedIn, async (req, res) => {
     let connection;
     try {
         connection = await mysql.createConnection({
@@ -46,9 +57,9 @@ app.get('/users', async (req, res) => {
         password: dbPwd,
         database: dbName
         });
-        
+          
         const rows = await db.getUsers()
-    
+        
         res.render('users', { rows: rows, path: req.path })
     }
     catch (err) {
@@ -65,7 +76,7 @@ app.get('/users', async (req, res) => {
     }
 })
 
-app.get('/support', async (req, res) => {
+app.get('/support', isLoggedIn, async (req, res) => {
     let connection;
     try {
         connection = await mysql.createConnection({
@@ -74,9 +85,9 @@ app.get('/support', async (req, res) => {
         password: dbPwd,
         database: dbName
         });
-        
+            
         const rows = await db.getSupport()
-    
+       
         res.render('support', { rows: rows, path: req.path })
     }
     catch (err) {
@@ -93,7 +104,7 @@ app.get('/support', async (req, res) => {
     }
 })
 
-app.get('/support_ticket/:id', async (req, res) => {
+app.get('/support_ticket/:id', isLoggedIn, async (req, res) => {
     let connection;
     try {
         connection = await mysql.createConnection({
@@ -102,7 +113,7 @@ app.get('/support_ticket/:id', async (req, res) => {
         password: dbPwd,
         database: dbName
         });
-        
+            
         const rows = await db.getSupportMessages(req.params.id)
         console.log(rows);
         res.render('support_ticket', { support: rows.support, messages: rows.messages, ticket_id: req.params.id, path: req.path })
@@ -121,7 +132,7 @@ app.get('/support_ticket/:id', async (req, res) => {
     }
 })
 
-app.get('/feedback', async (req, res) => {
+app.get('/feedback', isLoggedIn, async (req, res) => {
     let connection;
     try {
         connection = await mysql.createConnection({
@@ -130,9 +141,9 @@ app.get('/feedback', async (req, res) => {
         password: dbPwd,
         database: dbName
         });
-        
+            
         const rows = await db.getFeedback()
-    
+        
         res.render('feedback', { rows: rows, path: req.path })
     }
     catch (err) {
@@ -147,6 +158,11 @@ app.get('/feedback', async (req, res) => {
             console.error('Error closing connection:', closeError);
         }
     }
+})
+
+app.get('/login', async (req, res) => {
+    loggedIn = false
+    res.render('login', { path: req.path })
 })
 
 /*app.get('/feedback/:id', async (req, res) => {
@@ -204,6 +220,25 @@ app.post('/support_ticket', async (req, res) => {
     }
     else {
         console.log('Error in the ticket POST domain');
+    }
+})
+
+app.post('/login', async (req, res) => {
+    if (req.body.email.length != 0 && req.body.password.length != 0) {
+        const email = req.body.email
+        const password = req.body.password
+
+        loggedIn = await db.attemptLogin(email, password)
+
+        if (loggedIn == true) {
+            res.redirect('/users')
+        } else {
+            res.redirect('/login')
+        }
+    }
+    else {
+        console.log('email or password not filled in');
+        res.redirect('/login')
     }
 })
 
