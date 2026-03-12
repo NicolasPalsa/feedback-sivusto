@@ -1,0 +1,58 @@
+header a:first-of-type {
+    border-bottom-left-radius: 10px;
+}
+
+header a:last-of-type {
+    border-bottom-right-radius: 10px;
+}
+
+th, td {
+    border-left: 1px solid lightgray;
+}
+
+table.messages {
+    margin-top: 16px;
+}
+
+.top-border {
+    border-top: 1px solid lightgray;
+}
+
+.right-border {
+    border-right: 1px solid lightgray;
+}
+
+.ticket-div {
+    margin: 8px;
+}
+
+table {
+    margin: 0;
+}
+
+.normal-cell {
+    width: 20%;
+}
+
+.medium-cell {
+    width: 60%;
+}
+
+.long-cell {
+    width: 80%;
+}
+
+div.reply {
+    width: 100%;
+    margin: 2em;
+}
+
+input#reply {
+    width: 80%;
+    height: 24px;
+}
+
+input#submit {
+    width: 10%;
+    height: 30px;
+}

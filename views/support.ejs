@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support tickets</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+    <%- include('header') %>
+    <table>
+        <tr>
+            <th>status</th>
+            <th>id</th>
+            <th>arrived</th>
+            <th>customers</th>
+            <th>description</th>
+            <th>handled</th>
+        </tr>
+        <% for (const row of rows) { %>
+        <tr onclick="window.location='/support_ticket/<%= row.id %>'">
+            <td><%= row.status %></td>
+            <td><%= row.id %></td>
+            <td><%= new Date(row.arrived).toISOString().slice(0, 19).replace('T', ' ') %></td>
+            <td><%= row.customer %></td>
+            <td><%= row.description %></td>
+            <% if (row.handled) { %>
+                <td><%= new Date(row.handled).toISOString().slice(0, 19).replace('T', ' ') %></td>
+            <% } else { %>
+                <td>–</td>
+            <% } %>
+        </tr>
+        <% } %>
+    </table>
+</body>
+</html>

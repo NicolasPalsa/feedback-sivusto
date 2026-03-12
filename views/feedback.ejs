@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+    <%- include('header') %>
+    <table>
+        <tr>
+            <th>customer</th>
+            <th>arrived</th>
+            <th>Guest name</th>
+            <th>Guest email</th>
+            <th>feedback</th>
+            <th>handled</th>
+        </tr>
+        <% for (const row of rows) { %>
+        <tr>
+            <td><%= row.customer %></td>
+            <td><%= new Date(row.arrived).toISOString().slice(0, 19).replace('T', ' ') %></td>
+            <td><%= row['guest name'] %></td>
+            <td><%= row['guest name'] %></td>
+            <td><%= row.feedback %></td>
+            <td><%= new Date(row.handled).toISOString().slice(0, 19).replace('T', ' ') %></td>
+        </tr>
+        <% } %>
+    </table>
+</body>
+</html>

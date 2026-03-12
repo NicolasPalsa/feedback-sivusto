@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customers and users</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+    <%- include('header') %>
+    <table>
+        <tr>
+            <th>customer</th>
+            <th>id</th>
+            <th>full name</th>
+            <th>email</th>
+            <th>admin</th>
+        </tr>
+        <% for (const row of rows) { %>
+        <tr>
+            <td><%= row.customer %></td>
+            <td><%= row.id %></td>
+            <td><%= row['full name'] %></td>
+            <td><%= row.email %></td>
+            <td><%= row.admin %></td>
+        </tr>
+        <% } %>
+    </table>
+</body>
+</html>

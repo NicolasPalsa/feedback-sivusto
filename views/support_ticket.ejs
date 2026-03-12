@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support tickets</title>
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="/styles/ticket.css">
+    <script src="/js/status.js" defer></script>
+</head>
+<body>
+    <%- include('header') %>
+    <div class="ticket-div">
+        <table cellspacing="0">
+            <% for (ticket of support) { %>
+                <% if (ticket.id == ticket_id) { %>
+                    <tr colspan="2">
+                        <th class="normal-cell top-border">Ticket ID: <%= ticket_id %></th>
+                        <th class="long-cell top-border right-border">Customer: <%= ticket.customer %></th>
+                    </tr>
+        </table>
+        <table cellspacing="0">
+                    <tr>
+                        <th class="normal-cell">Status</th>
+                        <th class="normal-cell"><%- include('status_dropdown') %></th>
+                        <th class="medium-cell right-border"> Opened: <%= new Date(ticket.arrived).toISOString().slice(0, 19).replace('T', ' ') %> <br>Handled: <% if (ticket.handled == null) { %>–<% } else { %> <%= new Date(ticket.handled).toISOString().slice(0, 19).replace('T', ' ') %> <% } %> </th>
+                    </tr>
+        </table>
+        <table cellspacing="0">
+                    <tr colspan="2">
+                        <th class="normal-cell">Description</th>
+                        <th class="long-cell right-border"><%= ticket.description %></th>
+                    </tr>
+        </table>
+                <% } %>
+            <% } %>
+
+        <table class="messages" cellspacing="0">       
+            <tr>
+                <th class="top-border">Created at</th>
+                <th class="top-border">User</th>
+                <th class="top-border right-border">Message</th>
+            </tr>
+            <% for (const message of messages) { %>
+            <tr>
+                <td class="normal-cell"><%= new Date(message.message_date).toISOString().slice(0, 19).replace('T', ' ') %></td>
+                <td class="normal-cell"><%= message.message_name %></td>
+                <td class="medium-cell right-border"><%= message.reply %></td>
+            </tr>
+            <% } %>
+        </table>
+
+        <form action="/support_ticket" method="POST">
+            <div class="reply">
+                <input type="hidden" name="ticket_id" value="<%= ticket_id %>">           
+                <input type="hidden" name="admin_id" value="15">
+                <input type="text" name="reply" id="reply">
+                <input type="submit" value="Send reply" id="submit">
+            </div>
+        </form>
+    </div>
+</body>
+</html>
