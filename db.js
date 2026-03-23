@@ -1,5 +1,4 @@
 import mysql from 'mysql2/promise'
-
 import dbconfig from './dbconfig.json' with { type: 'json' }
 const pool = mysql.createPool(dbconfig)
 
@@ -172,26 +171,25 @@ const changeTicketStatus = async (ticket_id, status) => {
     }
 }
 
-const attemptLogin = async (email, id) => {
+const attemptLogin = async (email, password) => {
     try {
         const connection = await getConnection()
         const sql = `
-                    SELECT system_user.id AS 'id',
-                    system_user.email AS 'email',
+                    SELECT system_user.email AS 'email',
+                    system_user.password AS 'password',
                     system_user.admin AS 'admin'
                     FROM system_user
                     WHERE ADMIN = 1
-                    AND id = ?
-                    AND email = ?
+                    AND email = ?                    
                     `
-        const [bool] = await connection.execute(sql, [id, email])
+        const [bool] = await connection.execute(sql, [email])
         connection.release()
 
         if (bool[0] != undefined) {
-            console.log('login succesful')
-            return true
+            console.log('User found');
+            return bool[0].password
         } else {
-            console.log('login FAILED')
+            console.log('No user found')
             return false
         }
     } catch (error) {

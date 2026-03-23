@@ -2,6 +2,8 @@
 import express from 'express'
 import mysql from 'mysql2/promise'
 import path from 'node:path'
+import bcrypt from 'bcrypt'
+
 
 import config from './config.json' with { type: 'json' }
 import dbconfig from './dbconfig.json' with { type: 'json' }
@@ -228,13 +230,30 @@ app.post('/login', async (req, res) => {
         const email = req.body.email
         const password = req.body.password
 
-        loggedIn = await db.attemptLogin(email, password)
-
-        if (loggedIn == true) {
-            res.redirect('/users')
-        } else {
-            res.redirect('/login')
+        async function login(email, password) {
+            const foundUserHashedPass = await db.attemptLogin(email, password)
+            return foundUserHashedPass
         }
+
+        const hashedPass = await login(email, password)
+
+        bcrypt.compare(password, hashedPass, function(err, bcryptRes) {
+            if (err) {
+                console.log('Password comparison went wrong: ', err);
+                loggedIn = false
+                res.redirect('/login')
+            }
+            if (bcryptRes) {
+                console.log('Passwords match');
+                loggedIn = true
+                res.redirect('/users')
+            }
+            else {
+                console.log('Passwords do not match');
+                loggedIn = false
+                res.redirect('/login')
+            }
+        })
     }
     else {
         console.log('email or password not filled in');
