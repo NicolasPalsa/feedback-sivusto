@@ -22,7 +22,19 @@
         <table cellspacing="0">
                     <tr>
                         <th class="normal-cell">Status</th>
-                        <th class="normal-cell"><%- include('status_dropdown') %></th>
+                        <th class="normal-cell">
+                            <form action="/support_ticket" method="post">
+                                <input type="hidden" name="ticket_id" value="<%= ticket_id %>">
+                                <select name="status" id="status">
+                                    <option value="1" <%= ticket.status == 'open' ? `selected="true"` : '' %>>open</option>
+                                    <option value="2" <%= ticket.status == 'working on' ? `selected="true"` : '' %>>working on</option>
+                                    <option value="3" <%= ticket.status == 'done' ? `selected="true"` : '' %>>done</option>
+                                    <option value="4" <%= ticket.status == 'closed' ? `selected="true"` : '' %>>closed</option>
+                                </select>
+
+                                <input type="submit" class="hidden">
+                            </form>
+                        </th>
                         <th class="medium-cell right-border"> Opened: <%= new Date(ticket.arrived).toISOString().slice(0, 19).replace('T', ' ') %> <br>Handled: <% if (ticket.handled == null) { %>–<% } else { %> <%= new Date(ticket.handled).toISOString().slice(0, 19).replace('T', ' ') %> <% } %> </th>
                     </tr>
         </table>

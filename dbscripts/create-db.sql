@@ -20,7 +20,8 @@ CREATE TABLE system_user (
     email VARCHAR(256) NOT NULL,
     mailing_list BOOLEAN NOT NULL DEFAULT false,
     customer_id INT,
-    admin BOOLEAN NOT NULL DEFAULT false
+    admin BOOLEAN NOT NULL DEFAULT false,
+    password VARCHAR(255)
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS customer;

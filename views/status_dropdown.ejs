@@ -1,46 +1,10 @@
-<% const status = ticket.status %>
-<% if (status == 'open') { %>
     <form action="/support_ticket" method="post">
         <input type="hidden" name="ticket_id" value="<%= ticket_id %>">
         <select name="status" id="status">
-            <option value="1">open</option>
-            <option value="2">working on</option>
-            <option value="3">done</option>
-            <option value="4">closed</option>
+            <option value="1" <% status == 'open' ? `selected="true"` : '' %>>open</option>
+            <option value="2" <% status == 'open' ? `selected="true"` : '' %>>working on</option>
+            <option value="3" <% status == 'open' ? `selected="true"` : '' %>>done</option>
+            <option value="4" <% status == 'open' ? `selected="true"` : '' %>>closed</option>
         </select>
         <input type="submit" class="hidden">
     </form>
-<% } else if (status == 'closed') { %>
-    <form action="/support_ticket" method="post">
-        <input type="hidden" name="ticket_id" value="<%= ticket_id %>">
-        <select name="status" id="status">
-            <option value="4">closed</option>
-            <option value="2">working on</option>
-            <option value="3">done</option>
-            <option value="1">open</option>
-        </select>
-        <input type="submit" class="hidden">
-    </form>
-<% } else if (status == 'done') { %>
-    <form action="/support_ticket" method="post">
-        <input type="hidden" name="ticket_id" value="<%= ticket_id %>">
-        <select name="status" id="status">
-            <option value="3">done</option>
-            <option value="2">working on</option>
-            <option value="1">open</option>
-            <option value="4">closed</option>
-        </select>
-        <input type="submit" class="hidden">
-    </form>
-<% } else { %>
-    <form action="/support_ticket" method="post">
-        <input type="hidden" name="ticket_id" value="<%= ticket_id %>">
-        <select name="status" id="status">
-            <option value="2">working on</option>
-            <option value="1">open</option>
-            <option value="3">done</option>
-            <option value="4">closed</option>
-        </select>
-        <input type="submit" class="hidden">
-    </form>
-<% } %>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support tickets</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+    <%- include('header') %>
+    <div>
+        <form action="/user_page" method="post">
+            <input type="number" name="user_id" id="user_id" placeholder="ID" value="<%= row[0].id %>" readonly>
+
+            <input type="text" name="name" id="name" placeholder="John Doe" value="<%= row[0].fullname %>">
+
+            <input type="text" name="email" id="email" placeholder="email@example.com" value="<%= row[0].email %>">
+
+
+            <input type="radio" name="mailing_list" id="mailing_true" value="1" <% if (row[0].mailing_list == 1) { %> checked <% } %>>
+            <label for="mailing_true">true</label>
+            <input type="radio" name="mailing_list" id="mailing_false" value="0" <% if (row[0].mailing_list == 0) { %> checked <% } %>>
+            <label for="mailing_false">false</label>
+
+            <input type="number" name="customer_id" id="customer_id" placeholder="ID" value="<%= row[0].customer_id %>" min="-1">
+
+            <input type="radio" name="admin" id="admin_true" value="1" <% if (row[0].admin == 1) { %> checked <% } %>>
+            <label for="admin_true">true</label>
+            <input type="radio" name="admin" id="admin_false" value="0" <% if (row[0].admin == 0) { %> checked <% } %>>
+            <label for="admin_false">false</label>
+
+            <input type="text" name="password" id="password">
+
+            <input type="submit">
+        </form>
+    </div>
+</body>
+</html>

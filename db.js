@@ -38,6 +38,22 @@ const getUsers = async () => {
     }
 }
 
+const getUser = async (id) => {
+    try {
+        const connection = await getConnection()
+        const sql = `
+                    SELECT * FROM system_user
+                    WHERE id = ?
+                    `
+        const [user] = await connection.execute(sql, [id])
+        connection.release()
+        return user
+    } catch (error) {
+        console.error('Error getting users:', error)
+        throw error
+    }
+}
+
 const getUserName = async (id) => {
     try {
         const connection = await getConnection()
@@ -47,6 +63,27 @@ const getUserName = async (id) => {
                     WHERE system_user = ?
                     `
         const user = await connection.execute(sql, [id])
+        connection.release()
+        return user
+    } catch (error) {
+        throw error
+    }
+}
+
+const setUserInformation = async (name, email, mailing, customer, admin, password, id) => {
+    try {
+        const connection = await getConnection()
+        const sql = `
+                    UPDATE system_user
+                    SET fullname = ?,
+                    email = ?,
+                    mailing_list = ?,
+                    customer_id = ?,
+                    admin = ?,
+                    password = ?
+                    WHERE id = ?                   
+                    `
+        const user = await connection.execute(sql, [name, email, mailing, customer, admin, password, id])
         connection.release()
         return user
     } catch (error) {
@@ -201,7 +238,9 @@ const attemptLogin = async (email, password) => {
 
 export default {
     getUsers,
+    getUser,
     getUserName,
+    setUserInformation,
     getSupport,
     getSupportMessages,
     getFeedback,

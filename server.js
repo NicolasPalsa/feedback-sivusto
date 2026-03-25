@@ -1,5 +1,6 @@
 // Imports
 import express from 'express'
+import session from 'express-session'
 import mysql from 'mysql2/promise'
 import path from 'node:path'
 import bcrypt from 'bcrypt'
@@ -33,8 +34,16 @@ app.set('views', path.join(__dirname, 'views'))
 
 // Static
 app.use(express.urlencoded({extended: true}))
+app.use(session({
+  secret: "supersecretkey",
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}));
+
 app.use(express.static('public'))
 app.use('/styles', express.static('public/styles'));
+
 
 // Functions
 function isLoggedIn(req, res, next) {
@@ -117,8 +126,35 @@ app.get('/support_ticket/:id', isLoggedIn, async (req, res) => {
         });
             
         const rows = await db.getSupportMessages(req.params.id)
-        console.log(rows);
         res.render('support_ticket', { support: rows.support, messages: rows.messages, ticket_id: req.params.id, path: req.path })
+    }
+    catch (err) {
+        console.error('Database error: ' + err);
+        res.status(500).send('Internal Server Error');
+    }
+    if (connection) {
+        try {
+            await connection.end();
+        } 
+        catch (closeError) {
+            console.error('Error closing connection:', closeError);
+        }
+    }
+})
+
+app.get('/user_page/:id', isLoggedIn, async (req, res) => {
+    let connection;
+    try {
+        connection = await mysql.createConnection({
+        host: dbHost,
+        user: dbUser,
+        password: dbPwd,
+        database: dbName
+        });
+            
+        const row = await db.getUser(req.params.id)
+        console.log(row)
+        res.render('user_page', { row: row, path: req.path })
     }
     catch (err) {
         console.error('Database error: ' + err);
@@ -163,6 +199,7 @@ app.get('/feedback', isLoggedIn, async (req, res) => {
 })
 
 app.get('/login', async (req, res) => {
+    req.session.destroy(err => {if (err) throw err})
     loggedIn = false
     res.render('login', { path: req.path })
 })
@@ -225,6 +262,50 @@ app.post('/support_ticket', async (req, res) => {
     }
 })
 
+app.post('/user_page', async (req, res) => {
+    console.log(req);
+    let name = req.body.name
+    let email = req.body.email
+    let mailing = req.body.mailing_list
+    let customer = req.body.customer_id
+    let admin = req.body.admin
+    let password = req.body.password
+    let id = req.body.user_id
+
+    if (customer.length == 0) {
+        const user = await db.getUser(id)
+        if (user[0].customer_id == null) {
+            customer = null
+        }
+        else {
+            customer = user[0].customer_id
+        }
+    }
+    if (mailing.length == 0) mailing = 0
+    if (admin.length == 0) admin = 0
+
+    if (email.length == 0) {
+        const user = await db.getUser(id)
+        email = user[0].email
+    }
+
+    if (name.length == 0) {
+        const user = await db.getUser(id)
+        name = user[0].fullname
+    }
+
+    if (password.length == 0) {
+        const user = await db.getUser(id)
+        await db.setUserInformation(name, email, mailing, customer, admin, user[0].password, id)
+    }
+    else {
+        const hashedPassword = await bcrypt.hash(password, 12);
+        await db.setUserInformation(name, email, mailing, customer, admin, hashedPassword, id)
+    }
+
+    res.redirect('/user_page/' + id)
+})
+
 app.post('/login', async (req, res) => {
     if (req.body.email.length != 0 && req.body.password.length != 0) {
         const email = req.body.email
@@ -246,6 +327,7 @@ app.post('/login', async (req, res) => {
             if (bcryptRes) {
                 console.log('Passwords match');
                 loggedIn = true
+                req.session.user = { email: email } 
                 res.redirect('/users')
             }
             else {
@@ -260,5 +342,7 @@ app.post('/login', async (req, res) => {
         res.redirect('/login')
     }
 })
+
+
 
 app.listen(port, host, () => console.log(`Server is running at http://${host}:${port}/`))

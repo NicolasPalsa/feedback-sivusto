@@ -5,23 +5,23 @@ INSERT INTO customer (id, name) VALUES
   (4, 'Umbrella Corp'),
   (5, 'Stark Industries');
 
-INSERT INTO system_user (id, fullname, email, mailing_list, customer_id, admin) VALUES
-  (1, 'Alice Smith', 'alice@acme.com', false, 1, false),
-  (2, 'Bob Jones', 'bob@acme.com', false, 1, false),
-  (3, 'Charlie Brown', 'charlie@acme.com', false, 1, false),
-  (4, 'Dave Wilson', 'dave@globex.com', false, 2, false),
-  (5, 'Eve Adams', 'eve@globex.com', false, 2, false),
-  (6, 'Frank Underwood', 'frank@initech.com', false, 3, false),
-  (7, 'Grace Hopper', 'grace@initech.com', false, 3, false),
-  (8, 'Heidi Klum', 'heidi@initech.com', false, 3, false),
-  (9, 'Ivy League', 'ivy@umbrella.com', false, 4, false),
-  (10, 'Jack Ryan', 'jack@umbrella.com', false, 4, false),
-  (11, 'Karen Page', 'karen@stark.com', false, 5, false),
-  (12, 'Leo Messi', 'leo@stark.com', false, 5, false),
-  (13, 'Mona Lisa', 'mona@stark.com', false, 5, false),
-  (14, 'Operator B', 'bee@feedback.example.com', false, NULL, true),
-  (15, 'A Operator', 'a.op@feedback.example.com', false, NULL, true),
-  (16, 'Support Tech', 'support@feedback.example.com', false, NULL, true);
+INSERT INTO system_user (id, fullname, email, mailing_list, customer_id, admin, password) VALUES
+  (1, 'Alice Smith', 'alice@acme.com', false, 1, false, NULL),
+  (2, 'Bob Jones', 'bob@acme.com', false, 1, false, NULL),
+  (3, 'Charlie Brown', 'charlie@acme.com', false, 1, false, NULL),
+  (4, 'Dave Wilson', 'dave@globex.com', false, 2, false, NULL),
+  (5, 'Eve Adams', 'eve@globex.com', false, 2, false, NULL),
+  (6, 'Frank Underwood', 'frank@initech.com', false, 3, false, NULL),
+  (7, 'Grace Hopper', 'grace@initech.com', false, 3, false, NULL),
+  (8, 'Heidi Klum', 'heidi@initech.com', false, 3, false, NULL),
+  (9, 'Ivy League', 'ivy@umbrella.com', false, 4, false, NULL),
+  (10, 'Jack Ryan', 'jack@umbrella.com', false, 4, false, NULL),
+  (11, 'Karen Page', 'karen@stark.com', false, 5, false, NULL),
+  (12, 'Leo Messi', 'leo@stark.com', false, 5, false, NULL),
+  (13, 'Mona Lisa', 'mona@stark.com', false, 5, false, NULL),
+  (14, 'Operator B', 'bee@feedback.example.com', false, NULL, true, '$2a$12$Kd20QkPFsywuAgw1/CRsUurCOsRioqVNtexONaBok5hGwXxaM1PeG'),
+  (15, 'A Operator', 'a.op@feedback.example.com', false, NULL, true, '$2a$12$WQM0hSvsD6QGGwMfLvD7fO0P6AAgEEVnEWB2d512uDyDyzd1jkJ2m'),
+  (16, 'Support Tech', 'support@feedback.example.com', false, NULL, true, '$2a$12$hm6mMAJtWmvAfh6kF2a0pOpIRoFFfrjqbvQUBui.OPY4lj6DcMbPy');
 
 INSERT INTO ticket_status (id, description) VALUES
   (1, 'open'),

@@ -17,7 +17,7 @@
             <th>admin</th>
         </tr>
         <% for (const row of rows) { %>
-        <tr>
+        <tr onclick="window.location='/user_page/<%= row.id %>'">
             <td><%= row.customer %></td>
             <td><%= row.id %></td>
             <td><%= row['full name'] %></td>
